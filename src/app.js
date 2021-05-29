@@ -72,12 +72,13 @@ App = {
 		App.setLoading(true);
 
 		const newTask = $("#newTask").val();
-		const result = await App.todoList.createTask(newTask);
-		console.log(newTask);
-		console.log(result);
-		// await renderTasks();
-		const event = result.logs[0].args;
-		console.log(event);
+		await App.todoList.createTask(newTask);
+		window.location.reload();
+	},
+
+	toggleCompletion: async (taskId) => {
+		console.log("toggle completion called with taskID = ", taskId);
+		await App.todoList.toggleCompleted(taskId);
 		window.location.reload();
 	},
 
@@ -99,8 +100,10 @@ App = {
 			$newTaskTemplate
 				.find("input")
 				.prop("name", taskId)
-				.prop("checked", taskCompleted);
-			// .on("click", App.toggleCompleted);
+				.prop("checked", taskCompleted)
+				.on("click", async () => {
+					App.toggleCompletion(taskId);
+				});
 
 			// Put the task in the correct list
 			if (taskCompleted) {
