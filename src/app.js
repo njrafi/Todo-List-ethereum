@@ -43,6 +43,7 @@ App = {
 	loadAccount: async () => {
 		App.account = web3.eth.accounts[0];
 		console.log(App.account);
+		web3.eth.defaultAccount = web3.eth.accounts[0];
 	},
 
 	loadContract: async () => {
@@ -67,11 +68,17 @@ App = {
 		}
 	},
 
-	load: async () => {
-		await App.loadWeb3();
-		await App.loadAccount();
-		await App.loadContract();
-		await App.render();
+	createTask: async () => {
+		App.setLoading(true);
+
+		const newTask = $("#newTask").val();
+		const result = await App.todoList.createTask(newTask);
+		console.log(newTask);
+		console.log(result);
+		// await renderTasks();
+		const event = result.logs[0].args;
+		console.log(event);
+		window.location.reload();
 	},
 
 	renderTasks: async () => {
@@ -105,8 +112,6 @@ App = {
 			// Show the task
 			$newTaskTemplate.show();
 		}
-
-		// Show the task
 	},
 
 	render: async () => {
@@ -118,6 +123,13 @@ App = {
 		await App.renderTasks();
 
 		App.setLoading(false);
+	},
+
+	load: async () => {
+		await App.loadWeb3();
+		await App.loadAccount();
+		await App.loadContract();
+		await App.render();
 	},
 };
 
